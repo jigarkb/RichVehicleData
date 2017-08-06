@@ -1,0 +1,4 @@
+cron:
+- description: OpenXC Consume Pull Queue
+  url: /bigquery/consumepullqueue/openxc-stats-pull/OpenXCStats/OpenXC/120/1000/100
+  schedule: every 5 minutes
