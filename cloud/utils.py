@@ -32,7 +32,7 @@ def authenticate_user(self, target_url, email_list=None):
         email_list = []
     user = users.get_current_user()
     if user:
-        if user.email() in email_list:
+        if user.email().lower() in [email.lower() for email in email_list]:
             return user.email()
         else:
             self.response.out.write(
