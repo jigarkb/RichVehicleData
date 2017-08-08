@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name="in.jigarbhatt.richvehicledata.RegisterActivity" />
-        <activity android:name="in.jigarbhatt.richvehicledata.UserAreaActivity" />
+        <activity android:name="in.jigarbhatt.richvehicledata.StarterActivity" />
+        <service android:name="com.openxc.VehicleManager"/>
     </application>
 
 </manifest>

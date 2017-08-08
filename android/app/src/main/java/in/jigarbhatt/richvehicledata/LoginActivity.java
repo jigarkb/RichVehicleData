@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         SharedPreferences settings = getSharedPreferences(MY_PREF, 0);
-        String auth_token = settings.getString("auth_token", null);
+        final String auth_token = settings.getString("auth_token", null);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -40,8 +40,10 @@ public class LoginActivity extends AppCompatActivity {
                         String full_name = jsonResponse.getJSONObject("response").getString("full_name");
                         String user_id = jsonResponse.getJSONObject("response").getString("user_id");
 
-                        Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, StarterActivity.class);
                         intent.putExtra("full_name", full_name);
+                        intent.putExtra("auth_token", auth_token);
+                        intent.putExtra("user_id", user_id);
                         LoginActivity.this.startActivity(intent);
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -97,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("auth_token", auth_token);
                                 editor.commit();
 
-                                Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, StarterActivity.class);
                                 intent.putExtra("full_name", full_name);
                                 LoginActivity.this.startActivity(intent);
                             } else {
