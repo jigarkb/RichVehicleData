@@ -11,7 +11,7 @@ app = webapp2.WSGIApplication([
                   handler_method='consume_pull',
                   methods=['GET', 'POST']),
 
-    webapp2.Route(template='/openxc_stats/fetch_user_data/([^/]+)?',
+    webapp2.Route(template='/openxc_stats/fetch_user_data/<:([^/]+)?>',
                   handler=OpenXCStatsHandler,
                   handler_method='fetch_user_data',
                   methods=['GET', 'POST']),
