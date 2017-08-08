@@ -4,31 +4,65 @@ import traceback
 import time
 import webapp2
 from google.appengine.api import taskqueue
+from jose import jws
 
 from .models import *
 
 from google.appengine.ext import db
 
+
 class OpenXCStatsHandler(webapp2.RequestHandler):
     queue_name = "openxc-stats-pull"
+
+    def fetch_user_data(self, user_id):
+        user_email = utils.authenticate_user(self, self.request.url, ["jigarkub@usc.edu", "youngcho@isi.edu"])
+        if not user_email:
+            return
+
+        self.response.headers['Content-Type'] = "application/json"
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
+
+        try:
+            entries = utils.fetch_gql("select * from OpenXCStats where user_id='{}' order by created_at desc limit 50".format(user_id))
+            response = []
+            for entry in entries:
+                response.append(OpenXCStats.get_json_object(entry))
+
+            self.response.out.write(json.dumps({'success': True, 'error': [], 'response': response}))
+        except Exception as e:
+            self.response.out.write(json.dumps({'success': False, 'error': e.message, 'response': None}))
+            logging.error(traceback.format_exc())
+
     def add_to_pull(self):
         self.response.headers['Content-Type'] = "application/json"
         self.response.headers['Access-Control-Allow-Origin'] = '*'
 
         try:
-            payload = json.loads(self.request.get("payload", None))
+            authorization = self.request.headers.get('Authorization', '').split()
+            auth_type = authorization[0]
+            auth_token = authorization[1]
+            user_info = json.loads(jws.verify(auth_token, 'insecure secret', algorithms=['HS256']))
+            user_id = user_info.get('user_id')
+            full_name = user_info.get('full_name')
 
+            payload = json.loads(self.request.body)
             for entity in payload:
-                entity.update({'created_at': int(datetime.datetime.now().strftime('%s'))})
+                modified_entity = {
+                    'user_id': user_id,
+                    'measurement_type': entity.get('name'),
+                    'measurement_value': json.dumps(entity.get('value')),
+                    'measurement_key': json.dumps(entity.get('mKey')),
+                    'created_at': entity.get('timestamp')
+                }
+
                 utils.insert_in_pull_queue(
                     queue_name="openxc-stats-pull",
-                    payload=json.dumps(entity)
+                    payload=json.dumps(modified_entity)
                 )
-
+            self.error(201)
         except:
             self.error(500)
             logging.error(traceback.format_exc())
-
 
     def consume_pull(self):
         if "X-AppEngine-Cron" in self.request.headers:
@@ -37,7 +71,7 @@ class OpenXCStatsHandler(webapp2.RequestHandler):
                 stats = q.fetch_statistics()
                 task_in_queue = stats.tasks
                 logging.error(str(task_in_queue))
-                count = task_in_queue/20000.0
+                count = task_in_queue / 20000.0
                 while count > 0:
                     url = '/openxc_stats/consume_pull'
                     taskqueue.add(queue_name='general-stats', url=url)
@@ -73,4 +107,3 @@ class OpenXCStatsHandler(webapp2.RequestHandler):
                     q.delete_tasks(sub_list)
                 except:
                     logging.error(traceback.format_exc())
-

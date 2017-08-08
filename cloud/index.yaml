@@ -1,0 +1,6 @@
+indexes:
+- kind: OpenXCStats
+  properties:
+  - name: user_id
+  - name: created_at
+    direction: desc

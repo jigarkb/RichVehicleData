@@ -1,9 +1,11 @@
 import datetime
+import json
 
 import logging
 
 import model
 import utils
+
 
 class OpenXCStats(object):
     def __init__(self):
@@ -36,7 +38,6 @@ class OpenXCStats(object):
 
         return response
 
-
     def fetch_all(self):
         all_entries = self.get()
 
@@ -52,9 +53,9 @@ class OpenXCStats(object):
             "user_id": datastore_entity.user_id,
             "car_id": datastore_entity.car_id,
             "measurement_type": datastore_entity.measurement_type,
-            "measurement_value": datastore_entity.measurement_value,
-            "measurement_unit": datastore_entity.measurement_unit,
-            "created_at": int(datastore_entity.created_at.strftime("%s")),
+            "measurement_value": json.loads(datastore_entity.measurement_value),
+            "measurement_key": json.loads(datastore_entity.measurement_key),
+            "created_at": float(datastore_entity.created_at.strftime("%s")),
         }
 
         return json_object
@@ -66,7 +67,8 @@ class OpenXCStats(object):
         entry.car_id = json_object.get("car_id", None)
         entry.measurement_type = json_object.get("measurement_type", None)
         entry.measurement_value = json_object.get("measurement_value", None)
-        entry.measurement_unit = json_object.get("measurement_unit", None)
-        entry.created_at = datetime.datetime.fromtimestamp(json_object.get("created_at", int(datetime.datetime.now().strftime('%s'))))
+        entry.measurement_key = json_object.get("measurement_key", None)
+        entry.created_at = datetime.datetime.fromtimestamp(
+            json_object.get("created_at", int(datetime.datetime.now().strftime('%s'))))
 
         return entry
