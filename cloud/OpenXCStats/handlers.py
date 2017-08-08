@@ -23,7 +23,7 @@ class OpenXCStatsHandler(webapp2.RequestHandler):
         self.response.headers['Access-Control-Allow-Origin'] = '*'
 
         try:
-            entries = utils.fetch_gql("select * from OpenXCStats where user_id='{}' order by created_at desc limit 50".format(user_id))
+            entries = utils.fetch_gql("select * from OpenXCStats where user_id='{}' order by created_at desc limit 10".format(user_id))
             response = []
             for entry in entries:
                 response.append(OpenXCStats.get_json_object(entry))
