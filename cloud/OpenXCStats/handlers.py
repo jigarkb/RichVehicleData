@@ -15,7 +15,7 @@ class OpenXCStatsHandler(webapp2.RequestHandler):
     queue_name = "openxc-stats-pull"
 
     def fetch_user_data(self, user_id):
-        user_email = utils.authenticate_user(self, self.request.url, ["jigarkub@usc.edu", "youngcho@isi.edu"])
+        user_email = utils.authenticate_user(self, self.request.url, ["jigarkub@usc.edu", "youngcho@isi.edu", "younghc@gmail.com", "jigarbhatt93@gmail.com"])
         if not user_email:
             return
 
