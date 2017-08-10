@@ -101,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(LoginActivity.this, StarterActivity.class);
                                 intent.putExtra("full_name", full_name);
+                                intent.putExtra("auth_token", auth_token);
+
                                 LoginActivity.this.startActivity(intent);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);

@@ -11,19 +11,27 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text=""
+        android:text="@string/hello_world"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvWelcomeMsg"
-        android:id="@+id/engine_speed" />
+        android:id="@+id/tvStartNote"
+        android:text="@string/start_note"/>
 
-    <TextView
+    <Button
+        android:id="@+id/bStartCapture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/engine_speed"
-        android:id="@+id/fuel_consumed" />
+        android:layout_below="@+id/tvStartNote"
+        android:layout_marginTop="28dp"
+        android:text="@string/start_capturing"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>
