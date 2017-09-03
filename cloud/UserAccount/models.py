@@ -13,7 +13,7 @@ class UserAccount(object):
         pass
 
     def get(self, debug=False, **filters):
-        query_string = "select * from OpenXCStats"
+        query_string = "select * from UserAccount"
 
         filters = {key: val for key, val in filters.iteritems() if val != None}
 
